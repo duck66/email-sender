@@ -35,7 +35,7 @@ def upgrade():
     sa.Column('is_deleted', sa.Boolean(), server_default='false', nullable=True),
     sa.Column('deleted_at', sa.DateTime(), nullable=True),
     sa.Column('event_id', sa.Integer(), nullable=False),
-    sa.Column('subject', sa.Integer(), nullable=False),
+    sa.Column('subject', sa.String(), nullable=False),
     sa.Column('content', sa.String(), nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
