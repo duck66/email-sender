@@ -6,3 +6,8 @@ class EmailsSchema(Schema):
     subject = fields.String(required=True, allow_none=False)
     content = fields.String(required=True, allow_none=False)
     timestamp = fields.String(required=True, allow_none=False)
+
+class RecipientsSchema(Schema):
+    id = fields.Integer()
+    name = fields.String(required=True, allow_none=False)
+    email = fields.String(required=True, allow_none=False)
