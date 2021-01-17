@@ -10,4 +10,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from app.models import emails
-from app.routes import routes
+
+from app.blueprints.emails import email_blueprint
+app.register_blueprint(email_blueprint)
+
+# from app.routes import routes
