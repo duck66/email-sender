@@ -15,8 +15,8 @@ SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 # Celery related config
 REDIS_PORT = os.getenv("REDIS_PORT", "6379")
-RESULT_BACKEND = "redis://localhost:{REDIS_PORT}"
-CELERY_BROKER_URL = "redis://localhost:{REDIS_PORT}"
+RESULT_BACKEND = f"redis://localhost:{REDIS_PORT}"
+CELERY_BROKER_URL = f"redis://localhost:{REDIS_PORT}"
 
 UTC_OFFSET = 7
 
