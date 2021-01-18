@@ -18,7 +18,7 @@ Email scheduler app
 2. Run docker container
 
    ```shell
-   $ docker-compose -f docker/docker-compose.yml -p up -d
+   $ docker-compose up -d
    ```
 
 3. Install dependencies
