@@ -5,7 +5,7 @@ from marshmallow import ValidationError
 from datetime import timedelta, datetime
 from app.models.emails import Emails, EmailRecipients, EmailSender
 from app.models.enums import EmailStatus
-from app import celery
+from app import app, celery
 
 def save_emails(data):
     schema = EmailsSchema()
@@ -15,10 +15,9 @@ def save_emails(data):
         return http.HTTPStatus.BAD_REQUEST, dict(message=str(e))
 
     email = Emails(**validated_data).save()
-    # eta = datetime.utcnow() + timedelta(seconds=5)
-
+    # eta = datetime.utcnow() + timedelta(seconds=5)    
     save_sender(email.id)
-    send_email.apply_async((email.id,), eta=email.timestamp - timedelta(hours=7))
+    send_email.apply_async((email.id,), eta=email.timestamp - timedelta(hours=app.config["UTC_OFFSET"]))
 
     # WORK
     # send_email.apply_async((email.id,),countdown=10)

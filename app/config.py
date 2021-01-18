@@ -14,3 +14,5 @@ SQLALCHEMY_TRACK_MODIFICATIONS = True
 # Celery Configuration
 RESULT_BACKEND = "redis://localhost:6379"
 CELERY_BROKER_URL = "redis://localhost:6379"
+
+UTC_OFFSET = 7
