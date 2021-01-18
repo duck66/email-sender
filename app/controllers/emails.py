@@ -54,16 +54,15 @@ def save_sender(email_id : int):
 def send_email(email_id : int):
     recipients = EmailRecipients.query.all()
     recipients_email = [d.email for d in recipients]
-
+    email = Emails.query.filter_by(
+        id=email_id
+    ).first()
     print("Recipient ")
     print(recipients_email)
     print("Subject ", email.subject)
     print("Content ", email.content)
     print("Datetime ", datetime.now())
 
-    email = Emails.query.filter_by(
-        id=email_id
-    ).first()
     msg = Message(
         email.subject,
         sender = app.config["MAIL_USERNAME"],
