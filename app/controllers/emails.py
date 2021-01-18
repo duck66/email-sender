@@ -1,11 +1,11 @@
 import http
 from app.schemas.emails import EmailsSchema, RecipientsSchema
 from marshmallow import ValidationError
-
+from flask_mail import Message
 from datetime import timedelta, datetime
 from app.models.emails import Emails, EmailRecipients, EmailSender
 from app.models.enums import EmailStatus
-from app import app, celery
+from app import app, celery, mail
 
 def save_emails(data):
     schema = EmailsSchema()
@@ -15,6 +15,7 @@ def save_emails(data):
         return http.HTTPStatus.BAD_REQUEST, dict(message=str(e))
 
     email = Emails(**validated_data).save()
+
     # eta = datetime.utcnow() + timedelta(seconds=5)    
     save_sender(email.id)
     send_email.apply_async((email.id,), eta=email.timestamp - timedelta(hours=app.config["UTC_OFFSET"]))
@@ -52,14 +53,24 @@ def save_sender(email_id : int):
 @celery.task
 def send_email(email_id : int):
     recipients = EmailRecipients.query.all()
+    recipients_email = [d.email for d in recipients]
+
     print("Recipient ")
-    print(recipients)
-    email = Emails.query.filter_by(
-        id=email_id
-    ).first()
+    print(recipients_email)
     print("Subject ", email.subject)
     print("Content ", email.content)
     print("Datetime ", datetime.now())
+
+    email = Emails.query.filter_by(
+        id=email_id
+    ).first()
+    msg = Message(
+        email.subject,
+        sender = app.config["MAIL_USERNAME"],
+        recipients = recipients_email
+    )
+    msg.body = email.content
+    mail.send(msg)
 
     # Deprecated
     email_sender = EmailSender.query.filter_by(
