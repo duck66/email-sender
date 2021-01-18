@@ -16,15 +16,8 @@ def save_emails(data):
 
     email = Emails(**validated_data).save()
 
-    # eta = datetime.utcnow() + timedelta(seconds=5)    
     save_sender(email.id)
     send_email.apply_async((email.id,), eta=email.timestamp - timedelta(hours=app.config["UTC_OFFSET"]))
-
-    # WORK
-    # send_email.apply_async((email.id,),countdown=10)
-    # WORK
-    
-    # send_email.delay(email.id)
 
     return http.HTTPStatus.CREATED, schema.dump(email)
 
@@ -39,8 +32,6 @@ def save_recipients(data):
 
     return http.HTTPStatus.CREATED, schema.dump(email)
 
-# Deprecated
-# @celery.task
 def save_sender(email_id : int):
     recipients = EmailRecipients.query.all()
     for data in recipients:
@@ -70,8 +61,7 @@ def send_email(email_id : int):
     )
     msg.body = email.content
     mail.send(msg)
-
-    # Deprecated
+    
     email_sender = EmailSender.query.filter_by(
         email_id=email.id
     ).all()
