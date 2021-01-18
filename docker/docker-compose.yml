@@ -10,3 +10,8 @@ services:
       - POSTGRES_PASSWORD=password
     ports:
       - 5438:5432
+  redis:
+    image: redis:alpine3.10
+    container_name: emailsender_redis
+    ports:
+      - 6379:6379
